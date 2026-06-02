@@ -15,7 +15,9 @@ struct ContentView: View {
     @State private var habitToEdit: Habit? = nil
     @State private var showConfetti = false
     @AppStorage("isDarkMode") private var isDarkMode = false
+    #if os(iOS)
     @State private var editMode: EditMode = .inactive
+    #endif
     @State private var isArchiveExpanded = false
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
 
@@ -30,7 +32,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(uiColor: .systemGroupedBackground).ignoresSafeArea()
+                Color.sysGroupedBackground.ignoresSafeArea()
                 List {
                     Section {
                         QuoteView().padding(.bottom, 5)
@@ -60,51 +62,29 @@ struct ContentView: View {
                         }
                     }
                     
-                    if !archivedHabits.isEmpty {
-                        Section {
-                            DisclosureGroup(isExpanded: $isArchiveExpanded) {
-                                ForEach(archivedHabits) { h in
-                                    HStack(spacing: 15) {
-                                        Group { if h.icon.count > 2 { Image(systemName: h.icon) } else { Text(h.icon) } }
-                                            .font(.system(size: 18)).padding(8).background(Color.secondary.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
-                                        Text(h.name).font(.subheadline).foregroundStyle(.secondary)
-                                        Spacer()
-                                        Button("Restore") { h.isArchived = false }.font(.caption.bold()).buttonStyle(.bordered).tint(.blue)
-                                    }.padding(.vertical, 8)
-                                }
-                            } label: {
-                                Label("Archive (\(archivedHabits.count))", systemImage: "archivebox").font(.subheadline.bold()).foregroundStyle(.secondary)
-                            }
-                        }
-                        .listRowBackground(Color(uiColor: .secondarySystemGroupedBackground).opacity(0.5))
-                        .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
-                    }
+                    ArchivedHabitsSection(archivedHabits: archivedHabits, isArchiveExpanded: $isArchiveExpanded)
                     
                     if habits.isEmpty && archivedHabits.isEmpty {
-                        Section {
-                            VStack(spacing: 20) {
-                                Image(systemName: "list.clipboard")
-                                    .font(.system(size: 60))
-                                    .foregroundStyle(.secondary.opacity(0.3))
-                                Text("No habits yet!")
-                                    .font(.headline)
-                                    .foregroundStyle(.secondary)
-                                Button("Create your first habit") { showingAddHabit = true }
-                                    .font(.subheadline.bold())
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 50)
-                            .listRowBackground(Color.clear)
-                        }
+                        EmptyHabitsStateView(showingAddHabit: $showingAddHabit)
                     }
                 }
-                .listStyle(.plain).environment(\.editMode, $editMode)
+                .listStyle(.plain)
+                #if os(iOS)
+                .environment(\.editMode, $editMode)
+                #endif
                 if showConfetti { ConfettiView().ignoresSafeArea() }
             }
+            #if os(iOS)
             .fullScreenCover(isPresented: Binding(get: { !hasSeenOnboarding }, set: { _ in })) {
                  OnboardingView(hasSeenOnboarding: $hasSeenOnboarding)
             }
+            #else
+            .sheet(isPresented: Binding(get: { !hasSeenOnboarding }, set: { _ in })) {
+                 OnboardingView(hasSeenOnboarding: $hasSeenOnboarding)
+            }
+            #endif
             .navigationTitle("Habits")
+            #if os(iOS)
             .toolbar {
                 ToolbarItemGroup(placement: .topBarLeading) {
                     Button { isDarkMode.toggle() } label: { Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill").foregroundStyle(isDarkMode ? .yellow : .blue) }
@@ -115,6 +95,17 @@ struct ContentView: View {
                     Button { showingAddHabit = true } label: { Image(systemName: "plus.circle.fill").font(.title2) }
                 }
             }
+            #else
+            .toolbar {
+                ToolbarItemGroup(placement: .automatic) {
+                    Button { isDarkMode.toggle() } label: { Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill").foregroundStyle(isDarkMode ? .yellow : .blue) }
+                    Button { showingInsights.toggle() } label: { Image(systemName: "chart.bar.xaxis") }
+                }
+                ToolbarItemGroup(placement: .primaryAction) {
+                    Button { showingAddHabit = true } label: { Image(systemName: "plus.circle.fill").font(.title2) }
+                }
+            }
+            #endif
             .sheet(isPresented: $showingAddHabit) { HabitFormView(currentLevel: currentStats.currentLevel, nextOrder: habits.count) }
             .sheet(item: $habitToEdit) { h in HabitFormView(currentLevel: currentStats.currentLevel, habitToEdit: h) }
             .sheet(isPresented: $showingInsights) { InsightsView(habits: allHabits, stats: currentStats) }

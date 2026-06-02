@@ -7,11 +7,15 @@ class SoundManager {
     static let instance = SoundManager()
     func playPop() { 
         AudioServicesPlaySystemSound(1104)
+        #if os(iOS)
         let generator = UIImpactFeedbackGenerator(style: .medium); generator.impactOccurred()
+        #endif
     }
     func playSuccess() { 
         AudioServicesPlaySystemSound(1407)
+        #if os(iOS)
         let generator = UINotificationFeedbackGenerator(); generator.notificationOccurred(.success)
+        #endif
     }
 }
 

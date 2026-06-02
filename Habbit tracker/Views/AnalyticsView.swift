@@ -62,14 +62,14 @@ struct AnalyticsView: View {
                 }
             }
             .padding()
-            .background(Color(uiColor: .secondarySystemGroupedBackground))
+            .background(Color.secSysGroupedBackground)
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .padding(.horizontal)
             
             Spacer()
         }
         .navigationTitle("Analytics")
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(Color.sysGroupedBackground)
     }
     
     func formatDate(_ date: Date) -> String {

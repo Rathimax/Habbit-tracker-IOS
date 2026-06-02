@@ -36,7 +36,7 @@ struct HabitRowView: View {
             }
             ProgressView(value: Double(habit.completionCount), total: Double(habit.goal)).tint(habit.completionCount >= habit.goal ? .green : habit.themeColor)
         }
-        .padding().background(ZStack { Color(uiColor: .secondarySystemGroupedBackground); habit.cardGradient }).clipShape(RoundedRectangle(cornerRadius: 22)).shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
+        .padding().background(ZStack { Color.secSysGroupedBackground; habit.cardGradient }).clipShape(RoundedRectangle(cornerRadius: 22)).shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
         .onReceive(timer) { _ in if timerActive && timeRemaining > 0 { timeRemaining -= 1; if timeRemaining == 0 { timerActive = false; habit.timedSessionsCompleted += 1; completeStep(); SoundManager.instance.playSuccess() } } }
     }
     var timeString: String { String(format: "%02d:%02d", timeRemaining / 60, timeRemaining % 60) }

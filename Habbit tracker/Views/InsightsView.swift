@@ -30,7 +30,7 @@ struct InsightsView: View {
                         }
                     }
                     HeatmapView(habits: habits).padding(.horizontal)
-                    VStack(spacing: 15) { LabeledContent("Lifetime Wins", value: "\(habits.reduce(0) { $0 + $1.totalCompletionsEver })"); Divider(); LabeledContent("Timed Sessions", value: "\(habits.reduce(0) { $0 + $1.timedSessionsCompleted })") }.padding().background(Color(uiColor: .secondarySystemGroupedBackground)).clipShape(RoundedRectangle(cornerRadius: 20)).padding(.horizontal)
+                    VStack(spacing: 15) { LabeledContent("Lifetime Wins", value: "\(habits.reduce(0) { $0 + $1.totalCompletionsEver })"); Divider(); LabeledContent("Timed Sessions", value: "\(habits.reduce(0) { $0 + $1.timedSessionsCompleted })") }.padding().background(Color.secSysGroupedBackground).clipShape(RoundedRectangle(cornerRadius: 20)).padding(.horizontal)
                 }.padding(.top)
                 
                 NavigationLink(destination: AnalyticsView(habits: habits)) {
@@ -45,7 +45,7 @@ struct InsightsView: View {
                 }
                 .padding(.bottom, 20)
             }
-            .navigationTitle("Trends").background(Color(uiColor: .systemGroupedBackground)).toolbar { Button("Done") { dismiss() } }
+            .navigationTitle("Trends").background(Color.sysGroupedBackground).toolbar { Button("Done") { dismiss() } }
             .alert(item: $selectedBadge) { b in Alert(title: Text(b.name), message: Text("\(b.description)"), dismissButton: .default(Text("Got it!"))) }
         }
     }

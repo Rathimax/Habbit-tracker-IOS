@@ -15,7 +15,7 @@ struct DashboardCard: View {
                 Spacer(); HStack(spacing: 4) { Text("🔥"); Text("\(stats.globalStreak)").bold() }.padding(.horizontal, 12).padding(.vertical, 6).background(Color.orange.opacity(0.15)).clipShape(Capsule())
             }
             ProgressView(value: Double(stats.xpInLevel), total: 100).tint(.purple)
-        }.padding().background(Color(uiColor: .secondarySystemGroupedBackground)).clipShape(RoundedRectangle(cornerRadius: 22)).shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
+        }.padding().background(Color.secSysGroupedBackground).clipShape(RoundedRectangle(cornerRadius: 22)).shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
     }
 }
 
@@ -29,7 +29,7 @@ struct HeatmapView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Activity Map").font(.headline)
             ScrollView(.horizontal, showsIndicators: false) { LazyHGrid(rows: rows, spacing: 4) { ForEach(squares) { square in RoundedRectangle(cornerRadius: 3).fill(square.opacity > 0 ? Color.green.opacity(square.opacity) : Color.secondary.opacity(0.1)).frame(width: 12, height: 12) } }.rotationEffect(.degrees(180)).scaleEffect(x: -1, y: 1, anchor: .center) }
-        }.padding().background(Color(uiColor: .secondarySystemGroupedBackground)).clipShape(RoundedRectangle(cornerRadius: 20))
+        }.padding().background(Color.secSysGroupedBackground).clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }
 
@@ -50,3 +50,4 @@ struct ConfettiView: View {
     private let particles: [Particle] = (0..<40).map { i in Particle(color: [.blue, .red, .green, .yellow, .pink, .orange].randomElement()!, x: .random(in: -150...150), y: .random(in: -400...100), delay: Double(i) * 0.02) }
     var body: some View { ZStack { ForEach(particles) { p in Circle().fill(p.color).frame(width: 8).offset(x: animate ? p.x : 0, y: animate ? p.y : 0).opacity(animate ? 0 : 1).animation(.easeOut(duration: 1.5).delay(p.delay), value: animate) } }.onAppear { animate = true } }
 }
+

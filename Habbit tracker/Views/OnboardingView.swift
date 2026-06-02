@@ -5,7 +5,7 @@ struct OnboardingView: View {
     
     var body: some View {
         ZStack {
-            Color(uiColor: .systemGroupedBackground).ignoresSafeArea()
+            Color.sysGroupedBackground.ignoresSafeArea()
             
             VStack(spacing: 40) {
                 Spacer()
